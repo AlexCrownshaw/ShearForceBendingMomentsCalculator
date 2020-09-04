@@ -1,7 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
+
+bool SortDistance (const vector <double>& v1, const vector <double>& v2)    {
+    return v1.at(1) < v2.at(1);
+}
 
 int main()  {
     cout << "Enter the length of the beam in metres: ";
@@ -31,8 +36,8 @@ int main()  {
 
     cout << "Enter the distance of both supports from the left side: " ;
     vector <double> SupportDistances {};
-    double supportUserInput {};                                         /*User inputs the position of two supports which are stored in another 1D Vector.*/
-    int countSupport {0};                                                   /*The use of a vector in this case allows for future versions to compute beams with more than 2 supports*/
+    double supportUserInput {};                                     /*User inputs the position of two supports which are stored in another 1D Vector.*/
+    int countSupport {0};                                           /*The use of a vector in this case allows for future versions to compute beams with more than 2 supports*/
     while (countSupport < 2)    {
         cin >> supportUserInput;
         if (supportUserInput <= beamLength) {
@@ -49,26 +54,30 @@ int main()  {
     double R_b_ccw {};
     double R_b_cw {};
     int R_bCount {};
-    while (R_bCount < (countPointForce))    {                                                                                                                                       /*Iterates through all forces in 2D vector*/
-        if (pointForceVector_2d.at(R_bCount).at(1) < SupportDistances.at(0))    {                                                                                   /*and checks whether they induce a cw or ccw*/
-            R_b_ccw += (SupportDistances.at(0) - pointForceVector_2d.at(R_bCount).at(1)) * pointForceVector_2d.at(R_bCount).at(0);        /*moment. Both are summed up seperately .*/
+    while (R_bCount < (countPointForce))    {                                                                                          /*Iterates through all forces in 2D vector*/
+        if (pointForceVector_2d.at(R_bCount).at(1) < SupportDistances.at(0))    {                                                      /*and checks whether they induce a cw or ccw*/
+            R_b_ccw += (SupportDistances.at(0) - pointForceVector_2d.at(R_bCount).at(1)) * pointForceVector_2d.at(R_bCount).at(0);     /*moment. Both are summed up seperately .*/
         }
         else {
             R_b_cw += (pointForceVector_2d.at(R_bCount).at(1) - SupportDistances.at(0)) * pointForceVector_2d.at(R_bCount).at(0);
         }
         R_bCount++;
     }
-    double R_b {(R_b_ccw - R_b_cw) / -(SupportDistances.at(1) - SupportDistances.at(0))};           /*calculates the reaction force at the second support by summing up the cw and ccw moments*/
-    double pointForceSum {};                                                                                                      /*and dividing by the distance between the 2 supports*/
+    double R_b {(R_b_ccw - R_b_cw) / -(SupportDistances.at(1) - SupportDistances.at(0))};         /*calculates the reaction force at the second support by summing up the cw and ccw moments*/
+    double pointForceSum {};                                                                      /*and dividing by the distance between the 2 supports*/
     int sumCount {};
-    while (sumCount < (countPointForce))    {                                                                               /*Iterates through all forces in 2D vector and sums them up*/
+    while (sumCount < (countPointForce))    {                                                     /*Iterates through all forces in 2D vector and sums them up*/
         pointForceSum += pointForceVector_2d.at(sumCount).at(0);
         sumCount++;
     }
     cout << "Sum of point forces = " << pointForceSum << " Newtons" << endl;                
-    double R_a {pointForceSum - R_b};                                                                                                       /*Presumes beam is in equilibrium and uses sum of point forces and reaction forces */
-    cout << "R_a at " << SupportDistances.at(0) << " metres = " << R_a << " Newtons" << endl;                   /*to calculate the reaction at the first support.*/
+    double R_a {pointForceSum - R_b};                                                             /*Presumes beam is in equilibrium and uses sum of point forces and reaction forces */
+    cout << "R_a at " << SupportDistances.at(0) << " metres = " << R_a << " Newtons" << endl;     /*to calculate the reaction at the first support.*/
     cout << "R_b at " << SupportDistances.at(1) << " metres = " << R_b << " Newtons" << endl;
+
+    pointForceVector.at(0) = 0;
+    pointForceVector.at(1) = 0;                                                    /*Adds the reaction forces to the 2D vector */
+    pointForceVector_2d.push_back(pointForceVector);
 
     pointForceVector.at(0) = - R_a;
     pointForceVector.at(1) = SupportDistances.at(0);                                                    /*Adds the reaction forces to the 2D vector */
@@ -77,11 +86,15 @@ int main()  {
     pointForceVector.at(0) = - R_b;
     pointForceVector.at(1) = SupportDistances.at(1);
     pointForceVector_2d.push_back(pointForceVector);
-    
-    cout << "Enter 0 to exit" << endl;
-    int exit {1};
-    while (exit != 0)   {
-        cin >> exit;
+
+    pointForceVector.at(0) = 0;
+    pointForceVector.at(1) = beamLength;                                                    /*Adds the reaction forces to the 2D vector */
+    pointForceVector_2d.push_back(pointForceVector);
+
+    sort(pointForceVector_2d.begin(), pointForceVector_2d.end(), SortDistance);
+
+    for (int i {}; i < pointForceVector_2d.size(); i++)   {
+        cout << pointForceVector_2d.at(i).at(0) << " Newtons " << pointForceVector_2d.at(i).at(1) << " Metres" << endl;
     }
 
     return 0;
