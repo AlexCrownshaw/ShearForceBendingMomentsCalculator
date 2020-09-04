@@ -108,20 +108,24 @@ int main()  {
     double x {};
     double stepSize {beamLength / 100};
     double Vx {};
+    double Mx {};
     vector <double> SFBM {0, 0, 0};
     vector <vector<double>> SFBM_2D {};
     for (int i {}; i < (pointForceVector_2d.size() - 1); i++)   {
         Vx += pointForceVector_2d.at(i).at(0);
-        for (x;  x >= pointForceVector_2d.at(i).at(1) && x < pointForceVector_2d.at(i + 1).at(1); x += stepSize)   {
-            SFBM.at(0) = x;
-            SFBM.at(1) = Vx;
-            SFBM_2D.push_back(SFBM);
-             
-        }
+        for (x;  x >= pointForceVector_2d.at(i).at(1) && x < pointForceVector_2d.at(i + 1).at(1); x += stepSize)   {  
+                for (int j {}; j <= i; j++) {
+                   Mx += pointForceVector_2d.at(j).at(0) * (x - pointForceVector_2d.at(j).at(1));  
+                } 
+                SFBM.at(0) = x;
+                SFBM.at(1) = Vx;
+                SFBM.at(2) = Mx;
+                SFBM_2D.push_back(SFBM);
+                Mx = 0;
+        }        
     }
-
     for (int i {}; i < SFBM_2D.size(); i++) {
-        cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N) " << SFBM_2D.at(i).at(1) << endl;
+        cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N): " << SFBM_2D.at(i).at(1) << " Bending Moment (Nm): " << SFBM_2D.at(i).at(2) << endl;
     }
     cout << "================================================" << endl;
     return 0;
