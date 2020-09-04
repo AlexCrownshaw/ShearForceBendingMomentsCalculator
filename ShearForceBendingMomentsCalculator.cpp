@@ -34,6 +34,8 @@ int main()  {
     }
     cout << "Number of point forces = " << (countPointForce)<< endl;
 
+    cout << "================================================" << endl;
+
     cout << "Enter the distance of both supports from the left side: " ;
     vector <double> SupportDistances {};
     double supportUserInput {};                                     /*User inputs the position of two supports which are stored in another 1D Vector.*/
@@ -50,6 +52,8 @@ int main()  {
         }
     }
     cout << "Number of supports = " << countSupport << endl;
+
+    cout << "================================================" << endl;
 
     double R_b_ccw {};
     double R_b_cw {};
@@ -75,6 +79,8 @@ int main()  {
     cout << "R_a at " << SupportDistances.at(0) << " metres = " << R_a << " Newtons" << endl;     /*to calculate the reaction at the first support.*/
     cout << "R_b at " << SupportDistances.at(1) << " metres = " << R_b << " Newtons" << endl;
 
+    cout << "================================================" << endl;
+
     pointForceVector.at(0) = 0;
     pointForceVector.at(1) = 0;                                                    /*Adds the reaction forces to the 2D vector */
     pointForceVector_2d.push_back(pointForceVector);
@@ -97,6 +103,27 @@ int main()  {
         cout << pointForceVector_2d.at(i).at(0) << " Newtons " << pointForceVector_2d.at(i).at(1) << " Metres" << endl;
     }
 
+    cout << "================================================" << endl;
+
+    double x {};
+    double stepSize {beamLength / 100};
+    double Vx {};
+    vector <double> SFBM {0, 0, 0};
+    vector <vector<double>> SFBM_2D {};
+    for (int i {}; i < (pointForceVector_2d.size() - 1); i++)   {
+        Vx += pointForceVector_2d.at(i).at(0);
+        for (x;  x >= pointForceVector_2d.at(i).at(1) && x < pointForceVector_2d.at(i + 1).at(1); x += stepSize)   {
+            SFBM.at(0) = x;
+            SFBM.at(1) = Vx;
+            SFBM_2D.push_back(SFBM);
+             
+        }
+    }
+
+    for (int i {}; i < SFBM_2D.size(); i++) {
+        cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N) " << SFBM_2D.at(i).at(1) << endl;
+    }
+    cout << "================================================" << endl;
     return 0;
 }
 
