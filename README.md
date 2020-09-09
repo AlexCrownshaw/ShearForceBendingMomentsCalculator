@@ -11,7 +11,7 @@ The project aims to automate concepts learnt from my statics module of my first 
 Any feedback (C++ or git related) is very welcome. 
 
 # Planned features
-- Allow uniformily distributed forces to be inputted by the user and include in SF and BM calculations.
+- Allow uniformily distributed forces to be inputted by the user and included in SF and BM calculations.
 - Allow the user to input any number of supports.
 - Produce SF and BM graphs for easy visualisation.
 - Identify maximum SF and maximum BM. 
