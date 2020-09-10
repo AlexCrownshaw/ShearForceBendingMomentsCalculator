@@ -74,8 +74,8 @@ int main()  {
     cout << "================================================" << endl;
 
     for (int i {}; i < UDLVector_2d.size(); i++)    {
-        vec.at(1) = (((UDLVector_2d.at(i).at(2) - UDLVector_2d.at(i).at(1)) / 2) + UDLVector_2d.at(i).at(1));
-        vec.at(0) = (vec.at(1) * UDLVector_2d.at(i).at(0));
+        vec.at(0) = UDLVector_2d.at(i).at(0) * (UDLVector_2d.at(i).at(2) - UDLVector_2d.at(i).at(1));
+        vec.at(1) = UDLVector_2d.at(i).at(1) + ((UDLVector_2d.at(i).at(2) - UDLVector_2d.at(i).at(1)) / 2);
         vec.at(2) = 1;
         pointForceVector_2d.push_back(vec);
     }
@@ -118,11 +118,6 @@ int main()  {
         forceVector.push_back(vec);
     }
 
-    vec.at(0) = 0;
-    vec.at(1) = 0;
-    vec.at(2) = 0;                                                    
-    forceVector.push_back(vec);
-
     vec.at(0) = - R_a;
     vec.at(1) = SupportDistances.at(0);
     vec.at(2) = 0;                           /*Adds the reaction forces to the 2D vector*/
@@ -131,11 +126,6 @@ int main()  {
     vec.at(0) = - R_b;
     vec.at(1) = SupportDistances.at(1);
     vec.at(2) = 0;   
-    forceVector.push_back(vec);
-
-    vec.at(0) = 0;
-    vec.at(1) = beamLength;
-    vec.at(2) = 0;                                               
     forceVector.push_back(vec);
 
     sort(forceVector.begin(), forceVector.end(), SortDistance);
@@ -151,23 +141,33 @@ int main()  {
     }
 
     cout << "================================================" << endl;
-    double x {};
-    double stepSize {beamLength / 100};
+    double stepSize {beamLength / 100.0,};
     double Vx {};
     double Mx {};
     vector <vector<double>> SFBM_2D {};
-    for (size_t i {}; i < (forceVector.size() - 1); i++)   {
-        Vx += forceVector.at(i).at(0);
-        for (x;  x >= forceVector.at(i).at(1) && x < forceVector.at(i + 1).at(1); x += stepSize)   {  
-            for (int j {}; j <= i; j++) {
-                Mx += forceVector.at(j).at(0) * (x - forceVector.at(j).at(1));  
-            } 
-            vec.at(0) = x;
-            vec.at(1) = Vx;
-            vec.at(2) = Mx;
-            SFBM_2D.push_back(vec);
-            Mx = 0;
-        }         
+    for (double x {}; x <= beamLength; x += stepSize)   {
+        for (int i {}; i < forceVector.size(); i++)   {
+            if (x >= forceVector.at(i).at(1))   {
+                if (forceVector.at(i).at(2) == 0)    {
+                    Vx += forceVector.at(i).at(0);
+                    Mx += forceVector.at(i).at(0) * (x - forceVector.at(i).at(1));
+                }
+                else if (forceVector.at(i).at(2) < x)   {
+                    Vx += forceVector.at(i).at(0);
+                    Mx += forceVector.at(i).at(0) * (x - (forceVector.at(i).at(1) + ((forceVector.at(i).at(2) - forceVector.at(i).at(1)) / 2)));
+                }
+                else    {
+                    Vx += forceVector.at(i).at(0) * (x - forceVector.at(i).at(1));
+                    Mx += (forceVector.at(i).at(0) * (x - forceVector.at(i).at(1)) * (forceVector.at(i).at(1) + ((x - forceVector.at(i).at(1)) / 2)));
+                }
+            }
+        }
+        vec.at(0) = x;
+        vec.at(1) = Vx;
+        vec.at(2) = Mx;
+        SFBM_2D.push_back(vec);
+        Vx = 0;
+        Mx = 0;
     }
     for (int i {}; i < SFBM_2D.size(); i++) {
         cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N): " << SFBM_2D.at(i).at(1) << " Bending Moment (Nm): " << SFBM_2D.at(i).at(2) << endl;
