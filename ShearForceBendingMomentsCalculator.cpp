@@ -16,14 +16,14 @@ int main()  {
     cout << "Enter the number of point forces: ";
     int numberPointForces {};
     cin >> numberPointForces;
-    
     cout << "Enter the magnitude of each force followed by the distance in metres from the left end of the beam: ";
     vector <vector<double>> pointForceVector_2d {};                 
-    vector <double> pointForceVector {1, 0};                              /*Uses a 1D vector to intiliase a point force and a distance from the left hand side of the beam.*/ 
-    for (int i {}; i < numberPointForces; i++) {                          /*Iterates until all point forces specified by the user are inputted.*/       
-        cin >> pointForceVector.at(0) >> pointForceVector.at(1);          /*1D vector is pushed back into 2D vector which comprises of all the point forces and distances.*/
-        if (pointForceVector.at(1) <= beamLength)   {                     /*If statement checks that forces are within the user specified beam length*/
-            pointForceVector_2d.push_back(pointForceVector);
+    vector <double> vec {0, 0, 0};                           /*Uses a 1D vector to intiliase a point force and a distance from the left hand side of the beam.*/ 
+    for (size_t i {}; i < numberPointForces; i++) {          /*Iterates until all point forces specified by the user are inputted.*/       
+        cin >> vec.at(0) >> vec.at(1);
+        vec.at(2) = 0;                                        /*1D vector is pushed back into 2D vector which comprises of all the point forces and distances.*/
+        if (vec.at(1) <= beamLength)   {                     /*If statement checks that forces are within the user specified beam length*/
+            pointForceVector_2d.push_back(vec);
             cout << pointForceVector_2d.at(i).at(0) << " Newtons " << pointForceVector_2d.at(i).at(1) << " metres from the left" << endl;
         }
         else    {
@@ -34,10 +34,32 @@ int main()  {
 
     cout << "================================================" << endl;
 
+    cout << "Enter the number of UDL's: ";
+    int numberUDL {};
+    cin >> numberUDL;
+    vector <vector<double>> UDLVector_2d {};
+    cout << "Enter the magnitude of the UDL follwed by the starting distance and the end distance: ";
+    for (int i {0}; i < numberUDL; i++) {
+        cin >> vec.at(0) >> vec.at(1) >> vec.at(2);
+        if ((vec.at(1) < beamLength) && (vec.at(2) <= beamLength))  {
+            if (vec.at(1) < vec.at(2))  {
+                UDLVector_2d.push_back(vec);
+                cout << UDLVector_2d.at(i).at(0) << " Newton Metres " << UDLVector_2d.at(i).at(1) << " Metres to " << UDLVector_2d.at(i).at(2) << " Metres" << endl; 
+            }
+            else    {
+                cout << "The start distance must be less than the end distance." << endl;
+            }
+        }
+        else    {
+            cout << "The UDL must be within the beam length." << endl;
+        }
+    }
+    cout << "================================================" << endl;
+
     cout << "Enter the distance of both supports from the left side: " ;
     vector <double> SupportDistances {};
     double supportUserInput {};                                     /*User inputs the position of two supports which are stored in another 1D Vector.*/
-    for (int i {}; i < 2; i++)    {                                 /*The use of a vector in this case allows for future versions to compute beams with more than 2 supports*/
+    for (size_t i {}; i < 2; i++)    {                              /*The use of a vector in this case allows for future versions to compute beams with more than 2 supports*/
         cin >> supportUserInput;
         if (supportUserInput <= beamLength) {
             SupportDistances.push_back(supportUserInput);
@@ -51,10 +73,17 @@ int main()  {
 
     cout << "================================================" << endl;
 
+    for (int i {}; i < UDLVector_2d.size(); i++)    {
+        vec.at(1) = (((UDLVector_2d.at(i).at(2) - UDLVector_2d.at(i).at(1)) / 2) + UDLVector_2d.at(i).at(1));
+        vec.at(0) = (vec.at(1) * UDLVector_2d.at(i).at(0));
+        vec.at(2) = 1;
+        pointForceVector_2d.push_back(vec);
+    }
+
     double R_b_ccw {};
     double R_b_cw {};
-    for (int i {}; i < pointForceVector_2d.size(); i++)    {                                                                                          /*Iterates through all forces in 2D vector*/
-        if (pointForceVector_2d.at(i).at(1) < SupportDistances.at(0))    {                                                      /*and checks whether they induce a cw or ccw*/
+    for (size_t i {}; i < pointForceVector_2d.size(); i++)    {                                                          /*Iterates through all forces in 2D vector*/
+        if (pointForceVector_2d.at(i).at(1) < SupportDistances.at(0))    {                                               /*and checks whether they induce a cw or ccw*/
             R_b_ccw += (SupportDistances.at(0) - pointForceVector_2d.at(i).at(1)) * pointForceVector_2d.at(i).at(0);     /*moment. Both are summed up seperately .*/
         }
         else {
@@ -63,7 +92,7 @@ int main()  {
     }
     double R_b {(R_b_ccw - R_b_cw) / -(SupportDistances.at(1) - SupportDistances.at(0))};         /*calculates the reaction force at the second support by summing up the cw and ccw moments*/
     double pointForceSum {};                                                                      /*and dividing by the distance between the 2 supports*/
-    for (int i {}; i < pointForceVector_2d.size(); i++)    {                                      /*Iterates through all forces in 2D vector and sums them up*/
+    for (size_t i {}; i < pointForceVector_2d.size(); i++)    {                                      /*Iterates through all forces in 2D vector and sums them up*/
         pointForceSum += pointForceVector_2d.at(i).at(0);
     }
     cout << "Sum of point forces = " << pointForceSum << " Newtons" << endl;                
@@ -73,26 +102,52 @@ int main()  {
 
     cout << "================================================" << endl;
 
-    pointForceVector.at(0) = 0;
-    pointForceVector.at(1) = 0;                                                    /*Adds the reaction forces to the 2D vector */
-    pointForceVector_2d.push_back(pointForceVector);
+    vector <vector<double>> forceVector {};
+    for (int i {}; i < pointForceVector_2d.size(); i++) {
+        if (pointForceVector_2d.at(i).at(2) == 0)   {
+            vec.at(0) = pointForceVector_2d.at(i).at(0);
+            vec.at(1) = pointForceVector_2d.at(i).at(1);
+            vec.at(2) = 0;
+            forceVector.push_back(vec);
+        }
+    }
+    for (int i {}; i < UDLVector_2d.size(); i++)   {
+        vec.at(0) = UDLVector_2d.at(i).at(0);
+        vec.at(1) = UDLVector_2d.at(i).at(1);
+        vec.at(2) = UDLVector_2d.at(i).at(2);
+        forceVector.push_back(vec);
+    }
 
-    pointForceVector.at(0) = - R_a;
-    pointForceVector.at(1) = SupportDistances.at(0);                                                    /*Adds the reaction forces to the 2D vector */
-    pointForceVector_2d.push_back(pointForceVector);
+    vec.at(0) = 0;
+    vec.at(1) = 0;
+    vec.at(2) = 0;                                                    
+    forceVector.push_back(vec);
 
-    pointForceVector.at(0) = - R_b;
-    pointForceVector.at(1) = SupportDistances.at(1);
-    pointForceVector_2d.push_back(pointForceVector);
+    vec.at(0) = - R_a;
+    vec.at(1) = SupportDistances.at(0);
+    vec.at(2) = 0;                           /*Adds the reaction forces to the 2D vector*/
+    forceVector.push_back(vec);
 
-    pointForceVector.at(0) = 0;
-    pointForceVector.at(1) = beamLength;                                                    /*Adds the reaction forces to the 2D vector */
-    pointForceVector_2d.push_back(pointForceVector);
+    vec.at(0) = - R_b;
+    vec.at(1) = SupportDistances.at(1);
+    vec.at(2) = 0;   
+    forceVector.push_back(vec);
 
-    sort(pointForceVector_2d.begin(), pointForceVector_2d.end(), SortDistance);
+    vec.at(0) = 0;
+    vec.at(1) = beamLength;
+    vec.at(2) = 0;                                               
+    forceVector.push_back(vec);
 
-    for (int i {}; i < pointForceVector_2d.size(); i++)   {
-        cout << pointForceVector_2d.at(i).at(0) << " Newtons " << pointForceVector_2d.at(i).at(1) << " Metres" << endl;
+    sort(forceVector.begin(), forceVector.end(), SortDistance);
+
+    for (int i {}; i < forceVector.size(); i++)   {
+        cout << forceVector.at(i).at(0) << " Newtons " << forceVector.at(i).at(1) << " Metres";
+        if (forceVector.at(i).at(2) != 0)   {
+            cout << " to " << forceVector.at(i).at(2) << " Metres" << endl;
+        }
+        else    {
+            cout << endl;
+        }
     }
 
     cout << "================================================" << endl;
@@ -100,20 +155,19 @@ int main()  {
     double stepSize {beamLength / 100};
     double Vx {};
     double Mx {};
-    vector <double> SFBM {0, 0, 0};
     vector <vector<double>> SFBM_2D {};
-    for (int i {}; i < (pointForceVector_2d.size() - 1); i++)   {
-        Vx += pointForceVector_2d.at(i).at(0);
-        for (x;  x >= pointForceVector_2d.at(i).at(1) && x < pointForceVector_2d.at(i + 1).at(1); x += stepSize)   {  
+    for (size_t i {}; i < (forceVector.size() - 1); i++)   {
+        Vx += forceVector.at(i).at(0);
+        for (x;  x >= forceVector.at(i).at(1) && x < forceVector.at(i + 1).at(1); x += stepSize)   {  
             for (int j {}; j <= i; j++) {
-                Mx += pointForceVector_2d.at(j).at(0) * (x - pointForceVector_2d.at(j).at(1));  
+                Mx += forceVector.at(j).at(0) * (x - forceVector.at(j).at(1));  
             } 
-            SFBM.at(0) = x;
-            SFBM.at(1) = Vx;
-            SFBM.at(2) = Mx;
-            SFBM_2D.push_back(SFBM);
+            vec.at(0) = x;
+            vec.at(1) = Vx;
+            vec.at(2) = Mx;
+            SFBM_2D.push_back(vec);
             Mx = 0;
-        }        
+        }         
     }
     for (int i {}; i < SFBM_2D.size(); i++) {
         cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N): " << SFBM_2D.at(i).at(1) << " Bending Moment (Nm): " << SFBM_2D.at(i).at(2) << endl;
@@ -121,4 +175,3 @@ int main()  {
     cout << "================================================" << endl;
     return 0;
 }
-
