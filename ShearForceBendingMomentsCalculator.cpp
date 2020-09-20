@@ -152,13 +152,13 @@ int main()  {
                     Vx += forceVector.at(i).at(0);
                     Mx += forceVector.at(i).at(0) * (x - forceVector.at(i).at(1));
                 }
-                else if (forceVector.at(i).at(2) < x)   {
+                else if (forceVector.at(i).at(2) <= x)   {
                     Vx += forceVector.at(i).at(0);
                     Mx += forceVector.at(i).at(0) * (x - (forceVector.at(i).at(1) + ((forceVector.at(i).at(2) - forceVector.at(i).at(1)) / 2)));
                 }
                 else    {
                     Vx += forceVector.at(i).at(0) * (x - forceVector.at(i).at(1));
-                    Mx += (forceVector.at(i).at(0) * (x - forceVector.at(i).at(1)) * (forceVector.at(i).at(1) + ((x - forceVector.at(i).at(1)) / 2)));
+                    Mx += (forceVector.at(i).at(0) * (x - forceVector.at(i).at(1))) * ((x - forceVector.at(i).at(1)) / 2);
                 }
             }
         }
