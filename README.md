@@ -37,7 +37,7 @@ The Reaction force and force summary outputs look like;
 
 
 # Planned features
-- Allow uniformily distributed forces to be inputted by the user and included in SF and BM calculations.
 - Allow the user to input any number of supports.
 - Produce SF and BM graphs for easy visualisation.
-- Identify maximum SF and maximum BM. 
+- Identify maximum SF and maximum BM.
+- Add Triangular distributed load functionality 
