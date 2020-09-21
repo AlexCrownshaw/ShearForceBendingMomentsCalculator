@@ -234,7 +234,7 @@ double computeVx (vector <vector<double>> forceVector, double x, int i) {
         return forceVector.at(i).at(0);
     }
     else if (forceVector.at(i).at(2) <= x)   {
-        return forceVector.at(i).at(0);
+        return (forceVector.at(i).at(0) * (forceVector.at(i).at(2) - forceVector.at(i).at(1)));
     }
     else    {
         return (forceVector.at(i).at(0) * (x - forceVector.at(i).at(1)));
@@ -246,7 +246,7 @@ double computeMx (vector <vector<double>> forceVector, double x, int i) {
         return (forceVector.at(i).at(0) * (x - forceVector.at(i).at(1)));
     }
     else if (forceVector.at(i).at(2) <= x)   {
-        return (forceVector.at(i).at(0) * (x - (forceVector.at(i).at(1) + ((forceVector.at(i).at(2) - forceVector.at(i).at(1)) / 2))));
+        return ((forceVector.at(i).at(0) * (forceVector.at(i).at(2) - forceVector.at(i).at(1))) * (x - (forceVector.at(i).at(1) + ((forceVector.at(i).at(2) - forceVector.at(i).at(1)) / 2))));
     }
     else    {
         return ((forceVector.at(i).at(0) * (x - forceVector.at(i).at(1))) * ((x - forceVector.at(i).at(1)) / 2));
