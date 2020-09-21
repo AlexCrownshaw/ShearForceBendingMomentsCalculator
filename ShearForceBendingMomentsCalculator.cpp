@@ -52,6 +52,9 @@ int main()  {
                 Vx += computeVx(forceVector, x, i);
                 Mx += computeMx(forceVector, x, i);
             }
+            else    {
+                break;
+            }
         }
         vec.at(0) = x;
         vec.at(1) = Vx;
@@ -62,6 +65,7 @@ int main()  {
     }
     outputSFBM(SFBM_2D);
     programExit();
+    return 0;
 }
 
 double inputBeamLength()    {
