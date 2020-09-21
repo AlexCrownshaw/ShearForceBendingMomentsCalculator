@@ -21,6 +21,7 @@ double computeStepSize (double);
 double computeVx (vector <vector<double>>, double, int);
 double computeMx (vector <vector<double>>, double, int);
 void outputSFBM (vector <vector<double>>);
+void programExit ();
 
 int main()  {
     double beamLength {inputBeamLength()};
@@ -60,6 +61,7 @@ int main()  {
         Mx = 0;
     }
     outputSFBM(SFBM_2D);
+    programExit();
 }
 
 double inputBeamLength()    {
@@ -258,4 +260,10 @@ void outputSFBM (vector <vector<double>> SFBM_2D)   {
         cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N): " << SFBM_2D.at(i).at(1) << " Bending Moment (Nm): " << SFBM_2D.at(i).at(2) << endl;
     }
     cout << "================================================" << endl;
+}
+
+void programExit()  {
+    cout << "Enter any character to exit: ";
+    char i {};
+    cin >> i;
 }
