@@ -73,9 +73,9 @@ vector <vector<double>> inputPointForces(vector <double> vec, double beamLength)
         cout << "Enter the number of point forces: ";
     int numberPointForces {};
     cin >> numberPointForces;
-    cout << "Enter the magnitude of each force followed by the distance in metres from the left end of the beam: ";
     vector <vector<double>> pointForceVector_2d {};                                                                          
-    for (size_t i {}; i < numberPointForces; i++) {      
+    for (size_t i {}; i < numberPointForces; i++) {
+        cout << "Enter the magnitude of force followed by the distance in metres from the left end of the beam: ";     
         cin >> vec.at(0) >> vec.at(1);                       
         vec.at(2) = 0;                                       
         if (vec.at(1) <= beamLength)   {                    
@@ -97,8 +97,8 @@ vector <vector<double>> inputUDL(vector <double> vec, double beamLength)  {
     int numberUDL {};
     cin >> numberUDL;
     vector <vector<double>> UDLVector_2d {};
-    cout << "Enter the magnitude of the UDL follwed by the starting distance and the end distance: ";
     for (int i {0}; i < numberUDL; i++) {
+        cout << "Enter the magnitude of the UDL follwed by the starting distance and the end distance: ";
         cin >> vec.at(0) >> vec.at(1) >> vec.at(2);
         if ((vec.at(1) < beamLength) && (vec.at(2) <= beamLength))  {
             if (vec.at(1) < vec.at(2))  {
