@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -10,18 +11,21 @@ vector <vector<double>> inputPointForces(vector <double>, double);
 vector <vector<double>> inputUDL(vector <double>, double);
 vector <double> inputSupports(double);
 vector <double> UDL2Point(vector <vector<double>>, vector <double>, int);
-double computeSum (vector <vector<double>>);
-double computeR_b (vector <vector<double>>, vector <double>);
-double computeR_a (double, double);
+double computeSum(vector <vector<double>>);
+double computeR_b(vector <vector<double>>, vector <double>);
+double computeR_a(double, double);
 void outputReactions(double, double, double);
-vector <vector<double>> createForceVector (vector <vector<double>>, vector <vector<double>>, vector <double>, vector <double>, double, double);
-bool SortDistance (const vector <double>&, const vector <double>&);
-void outputForceVector (vector <vector<double>>);
-double computeStepSize (double);
-double computeVx (vector <vector<double>>, double, int);
-double computeMx (vector <vector<double>>, double, int);
-void outputSFBM (vector <vector<double>>);
-void programExit ();
+vector <vector<double>> createForceVector(vector <vector<double>>, vector <vector<double>>, vector <double>, vector <double>, double, double);
+bool SortDistance(const vector <double>&, const vector <double>&);
+void outputForceVector(vector <vector<double>>);
+double computeStepSize(double);
+double computeVx(vector <vector<double>>, double, int);
+double computeMx(vector <vector<double>>, double, int);
+double computeVx_max(double, double);
+double computeMx_max(double, double);
+void outputSFBM(vector <vector<double>>);
+void outputMax(double, double);
+void programExit();
 
 int main()  {
     double beamLength {inputBeamLength()};
@@ -45,6 +49,8 @@ int main()  {
     double stepSize {computeStepSize(beamLength)};
     double Vx {};
     double Mx {};
+    double Vx_max {};
+    double Mx_max {};
     vector <vector<double>> SFBM_2D {};
     for (double x {}; x <= beamLength; x += stepSize)   {
         for (int i {}; i < forceVector.size(); i++)   {
@@ -60,10 +66,13 @@ int main()  {
         vec.at(1) = Vx;
         vec.at(2) = Mx;
         SFBM_2D.push_back(vec);
+        Vx_max = computeVx_max(Vx, Vx_max);
+        Mx_max = computeMx_max(Mx, Mx_max);
         Vx = 0;
         Mx = 0;
     }
     outputSFBM(SFBM_2D);
+    outputMax(Vx_max, Mx_max);
     programExit();
     return 0;
 }
@@ -232,7 +241,7 @@ void outputForceVector (vector <vector<double>> forceVector)    {
 }
 
 double computeStepSize (double beamLength) {
-    return (beamLength / 100);
+    return (beamLength / 1000);
 }
 
 double computeVx (vector <vector<double>> forceVector, double x, int i) {
@@ -259,10 +268,34 @@ double computeMx (vector <vector<double>> forceVector, double x, int i) {
     }
 }
 
+double computeVx_max(double Vx, double Vx_max) {
+    if (abs(Vx) > abs(Vx_max))    {
+        return Vx;
+    }
+    else    {
+        return Vx_max;
+    }
+}
+
+double computeMx_max(double Mx, double Mx_max)  {
+    if (abs(Mx) > abs(Mx_max))    {
+        return Mx;
+    }
+    else    {
+        return Mx_max;
+    }
+} 
+
 void outputSFBM (vector <vector<double>> SFBM_2D)   {
     for (int i {}; i < SFBM_2D.size(); i++) {
         cout << "Distance (m): " << SFBM_2D.at(i).at(0) << " Shear Force (N): " << SFBM_2D.at(i).at(1) << " Bending Moment (Nm): " << SFBM_2D.at(i).at(2) << endl;
     }
+    cout << "================================================" << endl;
+}
+
+void outputMax(double Vx_max, double Mx_max)    {
+    cout << "Vx max (N) = " << Vx_max << endl;
+    cout << "Mx max (Nm) = " << Mx_max << endl;
     cout << "================================================" << endl;
 }
 

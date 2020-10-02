@@ -1,5 +1,5 @@
 # ShearForceBendingMomentsCalculator
-Calculates Shear Forces and bending moments along a simply supported two dimensional beam of any length.
+Calculates Shear Forces and bending moments along a simply supported two-dimensional beam of any length.
 The beam is assumed to be in equilibrium. 
 Forces acting on the beam can include any number of single point forces and uniformily distributed loads. 
 The number of supports is currently limited to two. 
@@ -15,29 +15,39 @@ The user will be prompted to enter each component in the following order:
 - Length of beam - Can be entered as an integer or a float in metres.
 - Number of Point Forces
 - Point forces - Each point force should be entered one at a time. Two values are required for each. The first is the Force
-                 in Newtons and the second is the distance of the force from the left hand side of the beam in metres.
-                 Each value should be seperated with a space.
+                 in Newtons and the second is the distance of the force from the left-hand side of the beam in metres.
+                 Each value should be separated with a space.
 - Number of UDL's
 - UDL's - Each UDL should be entered one at a time. Three values are required for each. The first is the distributed force
-          entered in Newtons/Metre. The second is the starting distance of the UDL from the left hand side of the beam in 
-          metres. The third is the end distance of the UDL from the left hand side of the beam in metres. The Third value must
+          entered in Newtons/Metre. The second is the starting distance of the UDL from the left-hand side of the beam in 
+          metres. The third is the end distance of the UDL from the left-hand side of the beam in metres. The Third value must
           be larger than the second. Each value should be speperated by a space.
-- Distance of Supports - Each distance should be entered one at a time in metres from the left hand side of the beam.
+- Distance of Supports - Each distance should be entered one at a time in metres from the left-hand side of the beam.
 
 # Example
+This example shows how the shear forces and bending moments can be solved for a simply supported beam with two point loads and two
+ uniformily distributed loads. (NOTE: The UDL's are inputted in Newtons, NOT Kilo Newtons).
+
 ![Beam Word art](https://user-images.githubusercontent.com/69728629/93761009-f5ac4d00-fc04-11ea-8ec9-070e19e3e62f.PNG)
 
-This beam is inputted as;
+This example is inputted as follows:
 
-![Input example](https://user-images.githubusercontent.com/69728629/93761913-89324d80-fc06-11ea-9091-7d0d4d7aacf3.PNG)
+![Input example](https://user-images.githubusercontent.com/69728629/94932275-c3ca9e80-04c0-11eb-8900-92d275d1d51a.PNG)
 
-The Reaction force and force summary outputs look like;
+The Reaction forces and force summary outputs look like;
 
-![Example Reactions and forces](https://user-images.githubusercontent.com/69728629/93762013-b7179200-fc06-11ea-88e1-83da0b5b4eb0.PNG)
+![Example Reactions and forces](https://user-images.githubusercontent.com/69728629/94932387-e8267b00-04c0-11eb-9261-ea3dbe265c85.PNG)
 
+The programme with calculate the shear forces and bending moments at 1000 points on the beam. While it is too long to include the entire calculation, here is
+a short snippet:
+
+![Example Calculations](https://user-images.githubusercontent.com/69728629/94932593-320f6100-04c1-11eb-82eb-fe4fecfcce15.PNG)
+
+The Maximum shear force and bending moment acting on the beam is outputted as:
+
+![Example Max](https://user-images.githubusercontent.com/69728629/94932630-3fc4e680-04c1-11eb-9e5f-7579f77f9b90.PNG)
 
 # Planned features
 - Allow the user to input any number of supports.
 - Produce SF and BM graphs for easy visualisation.
-- Identify maximum SF and maximum BM.
 - Add Triangular distributed load functionality 
