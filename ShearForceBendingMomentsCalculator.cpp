@@ -229,12 +229,11 @@ bool SortDistance (const vector <double>& v1, const vector <double>& v2)    {
 
 void outputForceVector (vector <vector<double>> forceVector)    {
     for (int i {}; i < forceVector.size(); i++)   {
-        cout << forceVector.at(i).at(0) << " Newtons " << forceVector.at(i).at(1) << " Metres";
-        if (forceVector.at(i).at(2) != 0)   {
-        cout << " to " << forceVector.at(i).at(2) << " Metres" << endl;
+        if (forceVector.at(i).at(2) == 0)   {
+            cout << forceVector.at(i).at(0) << " Newtons " << forceVector.at(i).at(1) << " Metres" << endl;
         }
-        else    {
-        cout << endl;
+        else   {
+        cout << forceVector.at(i).at(0) << " Newtons " << forceVector.at(i).at(1) << " to " << forceVector.at(i).at(2) << " Metres" << endl;
         }
     }
     cout << "================================================" << endl;

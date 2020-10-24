@@ -6,7 +6,7 @@ The number of supports is currently limited to two.
 The calculator divides the beam into 100 points and calculates the shear force and bending moment at each point. 
 
 # Context
-This is my first project in my learning of C++ and aslo my first repository in my learning of git/github. 
+This is my first project in my learning of C++ and also my first repository in my learning of git/github. 
 The project aims to automate concepts learnt from my statics module of my first year Aerospace Engineering degree.
 Any feedback (C++ or git related) is very welcome.
 
