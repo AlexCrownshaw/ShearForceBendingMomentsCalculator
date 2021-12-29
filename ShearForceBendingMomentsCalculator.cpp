@@ -293,8 +293,8 @@ void outputSFBM (vector <vector<double>> SFBM_2D)   {
 }
 
 void outputMax(double Vx_max, double Mx_max)    {
-    cout << "Vx max (N) = " << Vx_max << endl;
-    cout << "Mx max (Nm) = " << Mx_max << endl;
+    cout << "V(x)_max (N) = " << Vx_max << endl;
+    cout << "M(x)_max (Nm) = " << Mx_max << endl;
     cout << "================================================" << endl;
 }
 
