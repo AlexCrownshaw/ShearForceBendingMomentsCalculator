@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
 
@@ -25,6 +26,7 @@ double computeVx_max(double, double);
 double computeMx_max(double, double);
 void outputSFBM(vector <vector<double>>);
 void outputMax(double, double);
+void outputCSV(vector <vector<double>>);
 void programExit();
 
 int main()  {
@@ -73,6 +75,7 @@ int main()  {
     }
     outputSFBM(SFBM_2D);
     outputMax(Vx_max, Mx_max);
+    outputCSV(SFBM_2D);
     programExit();
     return 0;
 }
@@ -136,10 +139,13 @@ vector <vector<double>> inputUDL(vector <double> vec, double beamLength)  {
 }
 
 vector <double> inputSupports(double beamLength)    {
+    int supportNumber {};
+    cout << "Enter the number of supports" << endl;
+    cin >> supportNumber;
     cout << "Enter the distance of both supports from the left side: ";
     vector <double> supportDistances {};
     double supportUserInput {};                                     
-    for (size_t i {}; i < 2; i++)    {                              
+    for (size_t i {}; i < supportNumber; i++)    {                              
         cin >> supportUserInput;
         if (supportUserInput <= beamLength) {
             supportDistances.push_back(supportUserInput);
@@ -296,6 +302,16 @@ void outputMax(double Vx_max, double Mx_max)    {
     cout << "Vx max (N) = " << Vx_max << endl;
     cout << "Mx max (Nm) = " << Mx_max << endl;
     cout << "================================================" << endl;
+}
+
+void outputCSV(vector <vector<double>> SFBM_2D)    {
+    ofstream csvFile("Data.csv");
+
+    csvFile << "Distance_[m],Shear_Force_[N],Bending_Moment_[Nm]" << endl;
+
+    for (size_t i{}; i < SFBM_2D.size(); i++)   {
+        csvFile << SFBM_2D.at(i).at(0) << "," << SFBM_2D.at(i).at(1) << "," << SFBM_2D.at(i).at(2) << endl;
+    }
 }
 
 void programExit()  {
